@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 import json
 import os
 from Paciente import Paciente
+from Medicamento import Medicamento
 
 app = Flask(__name__)
 CORS(app)
@@ -74,6 +75,29 @@ def existe_usuario(nombre_usuario):
         if paciente.nombre_usuario == nombre_usuario:
             return True
     return False
+
+#INICIO CRUD MEDICAMENTOS
+@app.route('/cargar_medicamentos', methods=['POST'])
+def cargar_medicamentos():
+    cuerpo = request.get_json()
+    contenido = cuerpo['contenido']
+    filas = contenido.split("\r\n")
+    global medicamentos
+    for fila in filas:
+        print(fila)
+        columnas = fila.split(",")
+        medicamento = Medicamento(columnas[0],columnas[1],columnas[2],columnas[3])
+        medicamentos.append(medicamento)
+    return jsonify({"mensaje":"Carga masiva exitosa"})
+
+@app.route('/obtener_medicamentos', methods=['GET'])
+def obtener_medicamentos():
+    json_medicamentos = []
+    global medicamentos
+    for medicamento in medicamentos:
+        json_medicamentos.append(medicamento.get_json())
+    return jsonify(json_medicamentos)
+#FIN CRUD MEDICAMENTOS
 
 if __name__ == '__main__':
     puerto = int(os.environ.get('PORT', 3000))
