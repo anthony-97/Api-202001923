@@ -6,14 +6,14 @@
 class  Medicamento():
     def  __init__ ( self , nombre , precio , descripcion , cantidad ):
         self.nombre  =  nombre
-        yo .precio  =  precio
-        yo . descripcion  =  descripcion
-        yo . cantidad  =  cantidad
+        self.precio  =  precio
+        self.descripcion  =  descripcion
+        self.cantidad  =  cantidad
     
-    def  get_json ( yo ):
+    def  get_json (self):
         return {
-            "nombre" : self . nombre ,
-            "precio" : self . precio ,
-            "descripcion" : self . descripcion ,
-            "cantidad" : self . cantidad
+            "nombre" : self.nombre ,
+            "precio" : self.precio ,
+            "descripcion" : self.descripcion ,
+            "cantidad" : self.cantidad
         }
