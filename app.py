@@ -17,6 +17,7 @@ administrador = {
 }
 
 pacientes = []
+medicamentos = []
 
 @app.route('/', methods=['GET'])
 def principal():
