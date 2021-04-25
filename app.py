@@ -5,6 +5,7 @@ import os
 from Paciente import Paciente
 from Medicamento import Medicamento
 from Doctor import Doctor
+from Enfermera import Enfermera
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +21,7 @@ administrador = {
 pacientes = []
 medicamentos = []
 doctores = []
+enfermeras = []
 
 @app.route('/', methods=['GET'])
 def principal():
@@ -182,6 +184,63 @@ def editar_doctor():
     return jsonify(doctores[i].get_json())
 
 #FIN CRUD DOCTORES
+
+#INICIO CRUD ENFERMERAS
+@app.route('/cargar_enfermeras', methods=['POST'])
+def cargar_enfermeras():
+    cuerpo = request.get_json()
+    contenido = cuerpo['contenido']
+    filas = contenido.split("\n")
+    global enfermeras
+    for fila in filas:
+        print(fila)
+        columnas = fila.split(",")
+        enfermera = Enfermera(columnas[0],columnas[1],columnas[2],columnas[3],columnas[4],columnas[5],columnas[6])
+        enfermeras.append(enfermera)
+    return jsonify({"mensaje":"Carga masiva exitosa"})
+
+@app.route('/obtener_enfermeras', methods=['GET'])
+def obtener_enfermeras():
+    json_enfermeras = []
+    global enfermeras
+    for enfermera in enfermeras:
+        json_enfermeras.append(enfermera.get_json())
+    return jsonify(json_enfermeras)
+
+@app.route('/eliminar_enfermera', methods=['POST'])
+def eliminar_enfermera():
+    cuerpo = request.get_json()
+    indice = cuerpo['indice']
+    i = int(indice)
+    global enfermeras
+    enfermeras.pop(i)
+    return jsonify({"mensaje":"Eliminado exitosamente"})
+
+#nombre
+#apellido
+#fecha_nacimiento
+#sexo
+#nombre_usuario
+#contrasena
+#especialidad
+#telefono
+@app.route('/editar_enfermera', methods=['POST'])
+def editar_enfermera():
+    cuerpo = request.get_json()
+    indice = cuerpo['indice']
+    nombre = cuerpo['nombre']
+    apellido = cuerpo['apellido']
+    fecha_nacimiento = cuerpo['fecha_nacimiento']
+    sexo = cuerpo['sexo']
+    nombre_usuario = cuerpo['nombre_usuario']
+    contrasena = cuerpo['contrasena']
+    telefono = cuerpo['telefono']
+    i = int(indice)
+    global enfermeras
+    enfermeras[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
+    return jsonify(enfermeras[i].get_json())
+
+#FIN CRUD ENFERMERAS
 
 if __name__ == '__main__':
     puerto = int(os.environ.get('PORT', 3000))
