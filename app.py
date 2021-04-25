@@ -130,7 +130,7 @@ def cargar_doctores():
     cuerpo = request.get_json()
     contenido = cuerpo['contenido']
     filas = contenido.split("\n")
-    global medicamentos
+    global doctores
     for fila in filas:
         print(fila)
         columnas = fila.split(",")
