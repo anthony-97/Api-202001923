@@ -44,6 +44,23 @@ def registro_paciente():
     pacientes.append(nuevo_paciente)
     return jsonify({'agregado':1,'mensaje':'Registro exitoso'})
 
+
+
+
+#INICIO CRUD PACIENTES
+@app.route('/cargar_pacientes', methods=['POST'])
+def cargar_pacientes():
+    cuerpo = request.get_json()
+    contenido = cuerpo['contenido']
+    filas = contenido.split("\n")
+    global pacientes
+    for fila in filas:
+        print(fila)
+        columnas = fila.split(",")
+        paciente = Paciente(columnas[0],columnas[1],columnas[2],columnas[3],columnas[4],columnas[5],columnas[6])
+        pacientes.append(paciente)
+    return jsonify({"mensaje":"Carga masiva exitosa"})
+
 @app.route('/obtener_pacientes', methods=['GET'])
 def obtener_pacientes():
     json_pacientes = []
@@ -51,6 +68,33 @@ def obtener_pacientes():
     for paciente in pacientes:
         json_pacientes.append(paciente.get_json())
     return jsonify(json_pacientes)
+    
+@app.route('/eliminar_paciente', methods=['POST'])
+def eliminar_paciente():
+    cuerpo = request.get_json()
+    indice = cuerpo['indice']
+    i = int(indice)
+    global pacientes
+    pacientes.pop(i)
+    return jsonify({"mensaje":"Eliminado exitosamente"})
+
+@app.route('/editar_paciente', methods=['POST'])
+def editar_paciente():
+    cuerpo = request.get_json()
+    indice = cuerpo['indice']
+    nombre = cuerpo['nombre']
+    apellido = cuerpo['apellido']
+    fecha_nacimiento = cuerpo['fecha_nacimiento']
+    sexo = cuerpo['sexo']
+    nombre_usuario = cuerpo['nombre_usuario']
+    contrasena = cuerpo['contrasena']
+    telefono = cuerpo['telefono']
+    i = int(indice)
+    global pacientes
+    pacientes[i].editar_paciente(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
+    return jsonify(pacientes[i].get_json())
+
+#FIN CRUD PACIENTES
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -216,14 +260,6 @@ def eliminar_enfermera():
     enfermeras.pop(i)
     return jsonify({"mensaje":"Eliminado exitosamente"})
 
-#nombre
-#apellido
-#fecha_nacimiento
-#sexo
-#nombre_usuario
-#contrasena
-#especialidad
-#telefono
 @app.route('/editar_enfermera', methods=['POST'])
 def editar_enfermera():
     cuerpo = request.get_json()
@@ -239,8 +275,8 @@ def editar_enfermera():
     global enfermeras
     enfermeras[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
     return jsonify(enfermeras[i].get_json())
-
 #FIN CRUD ENFERMERAS
+
 
 if __name__ == '__main__':
     puerto = int(os.environ.get('PORT', 3000))
