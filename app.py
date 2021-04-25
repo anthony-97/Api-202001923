@@ -18,6 +18,7 @@ administrador = {
 
 pacientes = []
 medicamentos = []
+doctores = []
 
 @app.route('/', methods=['GET'])
 def principal():
@@ -122,6 +123,64 @@ def editar_medicamento():
     return jsonify(medicamentos[i].get_json())
 
 #FIN CRUD MEDICAMENTOS
+
+#INICIO CRUD DOCTORES
+@app.route('/cargar_doctores', methods=['POST'])
+def cargar_doctores():
+    cuerpo = request.get_json()
+    contenido = cuerpo['contenido']
+    filas = contenido.split("\n")
+    global medicamentos
+    for fila in filas:
+        print(fila)
+        columnas = fila.split(",")
+        doctor = Doctor(columnas[0],columnas[1],columnas[2],columnas[3],columnas[4],columnas[5],columnas[6],columnas[7])
+        doctores.append(doctor)
+    return jsonify({"mensaje":"Carga masiva exitosa"})
+
+@app.route('/obtener_doctores', methods=['GET'])
+def obtener_doctores():
+    json_doctores = []
+    global doctores
+    for doctor in doctores:
+        json_doctores.append(doctor.get_json())
+    return jsonify(json_doctores)
+
+@app.route('/eliminar_doctor', methods=['POST'])
+def eliminar_doctor():
+    cuerpo = request.get_json()
+    indice = cuerpo['indice']
+    i = int(indice)
+    global doctores
+    doctores.pop(i)
+    return jsonify({"mensaje":"Eliminado exitosamente"})
+
+#nombre
+#apellido
+#fecha_nacimiento
+#sexo
+#nombre_usuario
+#contrasena
+#especialidad
+#telefono
+@app.route('/editar_doctor', methods=['POST'])
+def editar_doctor():
+    cuerpo = request.get_json()
+    indice = cuerpo['indice']
+    nombre = cuerpo['nombre']
+    apellido = cuerpo['apellido']
+    fecha_nacimiento = cuerpo['fecha_nacimiento']
+    sexo = cuerpo['sexo']
+    nombre_usuario = cuerpo['nombre_usuario']
+    contrasena = cuerpo['contrasena']
+    especialidad = cuerpo['especialidad']
+    telefono = cuerpo['telefono']
+    i = int(indice)
+    global doctores
+    doctores[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,especialidad,telefono)
+    return jsonify(doctores[i].get_json())
+
+#FIN CRUD DOCTORES
 
 if __name__ == '__main__':
     puerto = int(os.environ.get('PORT', 3000))
