@@ -4,6 +4,7 @@ import json
 import os
 from Paciente import Paciente
 from Medicamento import Medicamento
+from Doctor import Doctor
 
 app = Flask(__name__)
 CORS(app)
