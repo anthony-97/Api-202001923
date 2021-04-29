@@ -95,7 +95,6 @@ def editar_paciente():
 
 #Fin metodos paciente
 
-sesion = 0
 def verificar_contrasena(nombre_usuario, contrasena):
     if nombre_usuario == administrador['nombre_usuario'] and contrasena == administrador['contrasena']:
         global sesion
