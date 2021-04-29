@@ -23,11 +23,11 @@ pacientes = []
 medicamentos = []
 doctores = []
 enfermeras = []
-sesion = 2 
+ 
 
 @app.route('/', methods=['GET'])
 def principal():
-    return "Api Taller 1"
+    return "Proyecto 2-API"
 
 @app.route('/registro_paciente', methods=['POST'])
 def registro_paciente():
@@ -95,6 +95,7 @@ def editar_paciente():
 
 #Fin metodos paciente
 
+sesion = 0
 def verificar_contrasena(nombre_usuario, contrasena):
     if nombre_usuario == administrador['nombre_usuario'] and contrasena == administrador['contrasena']:
         global sesion
