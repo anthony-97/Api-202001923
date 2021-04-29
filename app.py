@@ -23,7 +23,6 @@ pacientes = []
 medicamentos = []
 doctores = []
 enfermeras = []
-sesion = 2 
 
 @app.route('/', methods=['GET'])
 def principal():
@@ -94,7 +93,7 @@ def editar_paciente():
     return jsonify(pacientes[i].get_json())
 
 #Fin metodos paciente
-
+sesion = 2 
 def verificar_contrasena(nombre_usuario, contrasena):
     if nombre_usuario == administrador['nombre_usuario'] and contrasena == administrador['contrasena']:
         global sesion
@@ -270,8 +269,6 @@ def editar_enfermera():
     enfermeras[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
     return jsonify(enfermeras[i].get_json())
 #Fin metodos enfermera
-
-
 
 if __name__ == '__main__':
     puerto = int(os.environ.get('PORT', 3000))
