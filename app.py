@@ -11,6 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 #Almacenamiento
+#Cambios en las url's y tambien se le quito la s al https.
 administrador = {
     "nombre":"ingrid",
     "apellido":"perez",
@@ -22,6 +23,7 @@ pacientes = []
 medicamentos = []
 doctores = []
 enfermeras = []
+sesion = 2 
 
 @app.route('/', methods=['GET'])
 def principal():
@@ -44,10 +46,7 @@ def registro_paciente():
     pacientes.append(nuevo_paciente)
     return jsonify({'agregado':1,'mensaje':'Registro exitoso'})
 
-
-
-
-#INICIO CRUD PACIENTES
+#Metodos paciente
 @app.route('/cargar_pacientes', methods=['POST'])
 def cargar_pacientes():
     cuerpo = request.get_json()
@@ -94,27 +93,30 @@ def editar_paciente():
     pacientes[i].editar_paciente(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
     return jsonify(pacientes[i].get_json())
 
-#FIN CRUD PACIENTES
+#Fin metodos paciente
+
+def verificar_contrasena(nombre_usuario, contrasena):
+    if nombre_usuario == administrador['nombre_usuario'] and contrasena == administrador['contrasena']:
+        global sesion
+        sesion = 1
+        return True
+    global pacientes
+    for paciente in pacientes:
+        if paciente.nombre_usuario == nombre_usuario and paciente.contrasena == contrasena:
+            global sesion
+            sesion = 2
+            return True
+    return False
 
 @app.route('/login', methods=['GET'])
 def login():
     nombre_usuario = request.args.get("nombre_usuario")
     contrasena = request.args.get("contrasena")
     if not existe_usuario(nombre_usuario):
-        return jsonify({'estado': 0, 'mensaje':'No existe este usuario'})
+        return jsonify({'estado': 0,'mensaje':'No existe este usuario'})
     if verificar_contrasena(nombre_usuario,contrasena):
-        return jsonify({'estado': 1, 'mensaje':'Login exitoso'})
+        return jsonify({'estado': 1, 'sesion': sesion, 'mensaje':'Login exitoso'})
     return jsonify({'estado': 0, 'mensaje':'La contrasena es incorrecta'})
-    
-
-def verificar_contrasena(nombre_usuario, contrasena):
-    if nombre_usuario == administrador['nombre_usuario'] and contrasena == administrador['contrasena']:
-        return True
-    global pacientes
-    for paciente in pacientes:
-        if paciente.nombre_usuario == nombre_usuario and paciente.contrasena == contrasena:
-            return True
-    return False
 
 def existe_usuario(nombre_usuario):
     if nombre_usuario == administrador['nombre_usuario']:
@@ -125,7 +127,7 @@ def existe_usuario(nombre_usuario):
             return True
     return False
 
-#INICIO CRUD MEDICAMENTOS
+#Metodos medicamento
 @app.route('/cargar_medicamentos', methods=['POST'])
 def cargar_medicamentos():
     cuerpo = request.get_json()
@@ -169,9 +171,9 @@ def editar_medicamento():
     medicamentos[i].editar(nombre,precio,descripcion,cantidad)
     return jsonify(medicamentos[i].get_json())
 
-#FIN CRUD MEDICAMENTOS
+#Fin metodos medicamento
 
-#INICIO CRUD DOCTORES
+#Metodos doctor
 @app.route('/cargar_doctores', methods=['POST'])
 def cargar_doctores():
     cuerpo = request.get_json()
@@ -202,14 +204,6 @@ def eliminar_doctor():
     doctores.pop(i)
     return jsonify({"mensaje":"Eliminado exitosamente"})
 
-#nombre
-#apellido
-#fecha_nacimiento
-#sexo
-#nombre_usuario
-#contrasena
-#especialidad
-#telefono
 @app.route('/editar_doctor', methods=['POST'])
 def editar_doctor():
     cuerpo = request.get_json()
@@ -227,9 +221,9 @@ def editar_doctor():
     doctores[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,especialidad,telefono)
     return jsonify(doctores[i].get_json())
 
-#FIN CRUD DOCTORES
+#Fin metodos doctor
 
-#INICIO CRUD ENFERMERAS
+#Metodos enfermera
 @app.route('/cargar_enfermeras', methods=['POST'])
 def cargar_enfermeras():
     cuerpo = request.get_json()
@@ -275,7 +269,8 @@ def editar_enfermera():
     global enfermeras
     enfermeras[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
     return jsonify(enfermeras[i].get_json())
-#FIN CRUD ENFERMERAS
+#Fin metodos enfermera
+
 
 
 if __name__ == '__main__':

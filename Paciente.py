@@ -7,6 +7,7 @@
 #Teléfono: numero (opcional)
 
 class Paciente():
+    sesion = 2 #Ver si funciona o esta de mas
     def __init__(self,nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono):
         self.nombre = nombre
         self.apellido = apellido
