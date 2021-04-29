@@ -97,14 +97,12 @@ def editar_paciente():
 
 def verificar_contrasena(nombre_usuario, contrasena):
     if nombre_usuario == administrador['nombre_usuario'] and contrasena == administrador['contrasena']:
-        sesion = 0
         global sesion
         sesion = 1
         return True
     global pacientes
     for paciente in pacientes:
         if paciente.nombre_usuario == nombre_usuario and paciente.contrasena == contrasena:
-            sesion = 0
             global sesion
             sesion = 2
             return True
