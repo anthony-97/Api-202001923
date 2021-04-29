@@ -23,11 +23,11 @@ pacientes = []
 medicamentos = []
 doctores = []
 enfermeras = []
- 
+sesion = 2 
 
 @app.route('/', methods=['GET'])
 def principal():
-    return "Proyecto 2-API"
+    return "Api Taller 1"
 
 @app.route('/registro_paciente', methods=['POST'])
 def registro_paciente():
