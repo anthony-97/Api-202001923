@@ -27,3 +27,11 @@ class Enfermera():
             "telefono" : self.telefono
         }
     
+    def editar(self,nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.fecha_nacimiento = fecha_nacimiento
+        self.sexo = sexo
+        self.nombre_usuario = nombre_usuario
+        self.contrasena = contrasena
+        self.telefono = telefono

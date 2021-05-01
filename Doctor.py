@@ -29,3 +29,13 @@ class Doctor():
             "especialidad" : self.especialidad,
             "telefono" : self.telefono
         }
+
+    def editar(self,nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,especialidad,telefono):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.fecha_nacimiento = fecha_nacimiento
+        self.sexo = sexo
+        self.nombre_usuario = nombre_usuario
+        self.contrasena = contrasena
+        self.especialidad = especialidad
+        self.telefono = telefono

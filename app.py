@@ -26,7 +26,7 @@ enfermeras = []
 
 @app.route('/', methods=['GET'])
 def principal():
-    return "Api Taller 1"
+    return "API Proyecto 2"
 
 @app.route('/registro_paciente', methods=['POST'])
 def registro_paciente():
@@ -89,23 +89,27 @@ def editar_paciente():
     telefono = cuerpo['telefono']
     i = int(indice)
     global pacientes
-    pacientes[i].editar_paciente(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
+    pacientes[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,telefono)
     return jsonify(pacientes[i].get_json())
 
 #Fin metodos paciente
-sesion = 2 
+
 def verificar_contrasena(nombre_usuario, contrasena):
     if nombre_usuario == administrador['nombre_usuario'] and contrasena == administrador['contrasena']:
-        global sesion
-        sesion = 1
-        return True
+        return 1
     global pacientes
     for paciente in pacientes:
         if paciente.nombre_usuario == nombre_usuario and paciente.contrasena == contrasena:
-            global sesion
-            sesion = 2
-            return True
-    return False
+            return 2
+    global doctores 
+    for doctor in doctores:
+        if doctor.nombre_usuario == nombre_usuario and doctor.contrasena == contrasena:
+            return 3
+    global enfermeras
+    for enfermera in enfermeras:
+        if enfermera.nombre_usuario == nombre_usuario and enfermera.contrasena == contrasena:
+            return 4
+    return 0
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -113,7 +117,8 @@ def login():
     contrasena = request.args.get("contrasena")
     if not existe_usuario(nombre_usuario):
         return jsonify({'estado': 0,'mensaje':'No existe este usuario'})
-    if verificar_contrasena(nombre_usuario,contrasena):
+    sesion = verificar_contrasena(nombre_usuario,contrasena)
+    if sesion == 1 or 2 or 3 or 4:
         return jsonify({'estado': 1, 'sesion': sesion, 'mensaje':'Login exitoso'})
     return jsonify({'estado': 0, 'mensaje':'La contrasena es incorrecta'})
 
@@ -123,6 +128,14 @@ def existe_usuario(nombre_usuario):
     global pacientes
     for paciente in pacientes:
         if paciente.nombre_usuario == nombre_usuario:
+            return True
+    global doctores
+    for doctor in doctores:
+        if doctor.nombre_usuario == nombre_usuario:
+            return True
+    global enfermeras
+    for enfermera in enfermeras:
+        if enfermera.nombre_usuario == nombre_usuario:
             return True
     return False
 
@@ -219,7 +232,6 @@ def editar_doctor():
     global doctores
     doctores[i].editar(nombre,apellido,fecha_nacimiento,sexo,nombre_usuario,contrasena,especialidad,telefono)
     return jsonify(doctores[i].get_json())
-
 #Fin metodos doctor
 
 #Metodos enfermera
