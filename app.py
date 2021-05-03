@@ -28,8 +28,6 @@ enfermeras = []
 citas = []
 facturas = []
 
-pacientes.append(Paciente("Ingrid","Pérez","","","ingrid","1234","24452452"))
-
 @app.route('/', methods=['GET'])
 def principal():
     return "API Proyecto 2"
@@ -311,7 +309,7 @@ def editar_enfermera():
     return jsonify(enfermeras[i].get_json())
 #Fin metodos enfermera
 
-#INICIO CITAS
+#Metodos citas
 @app.route('/obtener_citas', methods=['GET'])
 def obtener_citas():
     json_citas = []
@@ -360,9 +358,9 @@ def rechazar_cita():
     global citas
     citas.pop(i)
     return jsonify({"mensaje":"Se ha rechazado la cita"})
-#FIN CITAS
+#Fin metodos citas
 
-#INICIO PACIENTE
+#Para saber si tiene cita
 @app.route('/tiene_cita', methods=['GET'])
 def tiene_cita():
     indice = request.args.get("id")
@@ -372,7 +370,6 @@ def tiene_cita():
             if cita.estado == "Pendiente" or cita.estado == "Aceptada":
                 return jsonify({'estado':1, 'mensaje':'Tiene una cita pendiente o aceptada.', 'fecha':cita.fecha, 'hora':cita.hora,'estado_cita':cita.estado,'doctor':cita.doctor})
     return jsonify({'estado':0, 'mensaje':'No tiene citas pendientes.'})
-#FIN PACIENTE
 
 #Facturas
 @app.route('/gen_fact', methods=['POST'])
