@@ -7,6 +7,7 @@ from Medicamento import Medicamento
 from Doctor import Doctor
 from Enfermera import Enfermera
 from Cita import Cita
+from Factura import Factura
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +26,7 @@ medicamentos = []
 doctores = []
 enfermeras = []
 citas = []
+facturas = []
 
 pacientes.append(Paciente("Ingrid","Pérez","","","ingrid","1234","24452452"))
 
@@ -70,7 +72,7 @@ def obtener_pacientes():
     for paciente in pacientes:
         json_pacientes.append(paciente.get_json())
     return jsonify(json_pacientes)
-    
+
 @app.route('/eliminar_paciente', methods=['POST'])
 def eliminar_paciente():
     cuerpo = request.get_json()
@@ -130,14 +132,25 @@ def get_indice_usuario(nombre_usuario):
     for i in range(len(pacientes)):
         if pacientes[i].nombre_usuario == nombre_usuario:
             return i
+    for i in range(len(doctores)):
+        if doctores[i].nombre_usuario == nombre_usuario:
+            return i
+    for i in range(len(enfermeras)):
+        if enfermeras[i].nombre_usuario == nombre_usuario:
+            return i
     return -1
 
 def get_nombre(nombre_usuario):
     for i in range(len(pacientes)):
         if pacientes[i].nombre_usuario == nombre_usuario:
             return pacientes[i].nombre
+    for i in range(len(doctores)):
+        if doctores[i].nombre_usuario == nombre_usuario:
+            return doctores[i].nombre
+    for i in range(len(enfermeras)):
+        if enfermeras[i].nombre_usuario == nombre_usuario:
+            return enfermeras[i].nombre
     return -1
-
 
 def existe_usuario(nombre_usuario):
     if nombre_usuario == administrador['nombre_usuario']:
@@ -199,7 +212,6 @@ def editar_medicamento():
     global medicamentos
     medicamentos[i].editar(nombre,precio,descripcion,cantidad)
     return jsonify(medicamentos[i].get_json())
-
 #Fin metodos medicamento
 
 #Metodos doctor
@@ -339,6 +351,15 @@ def solicitar_cita():
     global citas
     citas.append(Cita(fecha,hora,motivo,i))
     return jsonify({"mensaje":"Cita creada exitosamente"})
+
+@app.route('/rechazar_cita', methods=['POST'])
+def rechazar_cita():
+    cuerpo = request.get_json()
+    indice = cuerpo['indice']
+    i = int(indice)
+    global citas
+    citas.pop(i)
+    return jsonify({"mensaje":"Se ha rechazado la cita"})
 #FIN CITAS
 
 #INICIO PACIENTE
@@ -352,6 +373,16 @@ def tiene_cita():
                 return jsonify({'estado':1, 'mensaje':'Tiene una cita pendiente o aceptada.', 'fecha':cita.fecha, 'hora':cita.hora,'estado_cita':cita.estado,'doctor':cita.doctor})
     return jsonify({'estado':0, 'mensaje':'No tiene citas pendientes.'})
 #FIN PACIENTE
+
+#Facturas
+@app.route('/gen_fact', methods=['POST'])
+def gen_fact():
+    cuerpo = request.get_json()
+    doctor = cuerpo['doctor'] 
+    nueva_fact = Factura(doctor)
+    global facturas
+    facturas.append(nueva_fact)
+    return jsonify({'agregado':1,'mensaje':'Generada', 'doctor': doctor})
 
 if __name__ == '__main__':
     puerto = int(os.environ.get('PORT', 3000))

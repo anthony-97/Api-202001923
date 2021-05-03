@@ -5,7 +5,7 @@ class Cita():
         self.motivo = motivo
         self.paciente = paciente
         self.estado = "Pendiente"
-        self.doctor = -1
+        self.doctor = "Todavia no se ha asignado un doctor"
     
     def get_json(self):
         return {
