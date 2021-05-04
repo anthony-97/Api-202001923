@@ -122,9 +122,9 @@ def login():
     if not existe_usuario(nombre_usuario):
         return jsonify({'estado': 0,'mensaje':'No existe este usuario'})
     sesion = verificar_contrasena(nombre_usuario,contrasena)
-    if sesion == 1 or 2 or 3 or 4:
+    if sesion == 1 or 2 or 3 or 4 or 0:
         return jsonify({'estado': 1, 'sesion': sesion, 'mensaje':'Login exitoso','indice': get_indice_usuario(nombre_usuario), 'nombre': get_nombre(nombre_usuario)})
-    return jsonify({'estado': 0, 'mensaje':'La contrasena es incorrecta'})
+    return jsonify({'estado': 0, 'sesion': sesion,'mensaje':'La contrasena es incorrecta'})
 
 def get_indice_usuario(nombre_usuario):
     for i in range(len(pacientes)):
@@ -137,6 +137,7 @@ def get_indice_usuario(nombre_usuario):
         if enfermeras[i].nombre_usuario == nombre_usuario:
             return i
     return -1
+
 
 def get_nombre(nombre_usuario):
     for i in range(len(pacientes)):
